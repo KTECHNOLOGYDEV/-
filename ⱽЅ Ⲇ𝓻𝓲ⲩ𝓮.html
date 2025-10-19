@@ -604,6 +604,7 @@
       document.getElementById('assistModal').style.display = 'flex';
     }
 
+    // ✅ Função corrigida para abrir o WhatsApp externamente
     function sendWhatsApp() {
       const description = document.getElementById('problemDescription').value.trim();
       if (!description) {
@@ -637,18 +638,17 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // ✅ Corrigido para funcionar no Sketchware
-      window.location.href = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
-
+      // ✅ Corrigido para funcionar no Sketchware (abre no app do WhatsApp)
+      window.open(`https://wa.me/55${phoneNumber}?text=${encodedMessage}`, '_system');
       // Fechar modal
       closeModal('assistModal');
     }
 
-    // Função corrigida para abrir o mapa
+    // ✅ Função corrigida para abrir o mapa externamente
     function openMap() {
       if (currentMapUrl) {
-        // ✅ Corrigido para funcionar no Sketchware
-        window.location.href = currentMapUrl;
+        // ✅ Corrigido para funcionar no Sketchware (abre no app de mapas)
+        window.open(currentMapUrl, '_system');
       } else {
         alert("Link de localização não disponível.");
       }
