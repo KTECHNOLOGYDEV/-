@@ -604,7 +604,7 @@
       document.getElementById('assistModal').style.display = 'flex';
     }
 
-    // ✅ Função corrigida para abrir o WhatsApp externamente
+    // ✅ Função corrigida para abrir o WhatsApp com fallback robusto
     function sendWhatsApp() {
       const description = document.getElementById('problemDescription').value.trim();
       if (!description) {
@@ -638,17 +638,35 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // ✅ Corrigido para funcionar no Sketchware (abre no app do WhatsApp)
-      window.open(`https://wa.me/55${phoneNumber}?text=${encodedMessage}`, '_system');
+      // Monta a URL do WhatsApp
+      const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
+
+      // --- Técnica Robusta para Abrir Externamente ---
+      // Cria um link temporário
+      const link = document.createElement('a');
+      link.href = whatsappUrl;
+      link.target = '_blank'; // Tenta abrir em nova aba (ou app)
+      link.rel = 'noopener noreferrer'; // Boa prática de segurança
+      document.body.appendChild(link); // Adiciona ao DOM temporariamente
+      link.click(); // Simula o clique
+      document.body.removeChild(link); // Remove o link temporário
+
       // Fechar modal
       closeModal('assistModal');
     }
 
-    // ✅ Função corrigida para abrir o mapa externamente
+    // ✅ Função corrigida para abrir o mapa com fallback robusto
     function openMap() {
       if (currentMapUrl) {
-        // ✅ Corrigido para funcionar no Sketchware (abre no app de mapas)
-        window.open(currentMapUrl, '_system');
+        // --- Técnica Robusta para Abrir Externamente ---
+        // Cria um link temporário
+        const link = document.createElement('a');
+        link.href = currentMapUrl;
+        link.target = '_blank'; // Tenta abrir em nova aba (ou app)
+        link.rel = 'noopener noreferrer'; // Boa prática de segurança
+        document.body.appendChild(link); // Adiciona ao DOM temporariamente
+        link.click(); // Simula o clique
+        document.body.removeChild(link); // Remove o link temporário
       } else {
         alert("Link de localização não disponível.");
       }
