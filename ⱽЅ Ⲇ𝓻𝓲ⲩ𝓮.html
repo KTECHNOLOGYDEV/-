@@ -236,43 +236,6 @@
       transform: scale(1.05);
     }
 
-    /* Estilo para a seção de assistência */
-    .assistance-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .assist-button {
-      background: linear-gradient(135deg, var(--secondary), #e6b400);
-      color: #000000;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-      min-width: 140px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .assist-button:hover {
-      transform: scale(1.05) translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
-      background: linear-gradient(135deg, #ffd633, #e6b400);
-    }
-
-    .assist-button i {
-      margin-right: 8px;
-      font-size: 1.1rem;
-    }
-
     /* Estilo para a data e hora moderna */
     .modern-datetime {
       background: rgba(255, 255, 255, 0.05);
@@ -342,14 +305,6 @@
       margin: 4px 0;
     }
 
-    /* Estilo para o cabeçalho da seção de atendimento */
-    .service-header {
-      font-weight: 600;
-      color: var(--secondary);
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-    }
-
     /* Estilo para o footer */
     .footer {
       margin-top: 40px;
@@ -364,12 +319,6 @@
     @media (max-width: 768px) {
       .card {
         padding: 16px;
-      }
-      .assistance-section {
-        flex-direction: column;
-      }
-      .assist-button {
-        min-width: 100%;
       }
       .modern-datetime {
         font-size: 1rem;
@@ -409,8 +358,8 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Vehicle Info Card -->
-      <div class="card">
+      <!-- Veículo Alocado (2 colunas) -->
+      <div class="card col-span-2">
         <h2 class="text-xl font-semibold mb-4">Veículo Alocado</h2>
         <div class="mb-4">
           <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
@@ -429,7 +378,7 @@
         </div>
       </div>
 
-      <!-- User Info Card -->
+      <!-- Bem-vindo(a), (1 coluna) -->
       <div class="card user-greeting">
         <div class="flex justify-between items-start">
           <div>
@@ -846,4 +795,3 @@
 
 </body>
 </html>
-
