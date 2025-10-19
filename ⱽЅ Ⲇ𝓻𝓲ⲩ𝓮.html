@@ -57,33 +57,6 @@
       transform: scale(1.05);
       box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
     }
-    .btn-renew {
-      background: #00aaff;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
-      margin-right: 8px;
-    }
-    .btn-renew:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
-    }
-    .btn-help {
-      background: #28a745;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-    .btn-help:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
-    }
     .card {
       background: #0a0a0a;
       border: 1px solid #ffc107;
@@ -363,15 +336,6 @@
           <strong>Dica de Segurança:</strong>
           <p id="safetyTip" class="text-sm">Sem dica disponível.</p>
         </div>
-
-        <!-- Devolução -->
-        <div id="devolutionContainer" style="display:none;" class="mt-4">
-          <div class="devolution-box">
-            <div class="devolution-title">Data e Horário de Devolução</div>
-            <p><strong>Data:</strong> <span id="devolutionDate">Carregando...</span></p>
-            <p><strong>Hora:</strong> <span id="devolutionTime">Carregando...</span></p>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -418,13 +382,13 @@
   </div>
 
   <script>
-    // ✅ URL da API v4 do Google Sheets (com a chave correta)
-    const sheetUrl = "https://sheets.googleapis.com/v4/spreadsheets/1mHnFnVJnCjqp7dyA8Ruh2O75CTkRVMd9l-7pl-FAf_4/values/A1:I1000?key=AIzaSyABsTa--YQp1SiL_2fPtAc7HDzT8oTkrIk";
+    // A URL da planilha agora lê até a coluna G (índice 6)
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/1mHnFnVJnCjqp7dyA8Ruh2O75CTkRVMd9l-7pl-FAf_4/gviz/tq?tqx=out:json";
 
     let currentMapUrl = "";
     let assistType = "";
 
-    // Função para formatar a data e hora de forma corporativa
+    // Função para formatar a data e hora
     function updateDateTime() {
       const now = new Date();
       const options = { 
@@ -445,37 +409,40 @@
       document.getElementById('dateTime').textContent = `São: ${time}, hoje é dia ${date} - ${weekday}`;
     }
 
-    // Função para buscar dados da planilha via API v4
+    // Função para buscar dados da planilha
     async function fetchSheetData() {
       try {
         const res = await fetch(sheetUrl);
-        const json = await res.json();
+        const text = await res.text();
+        
+        // Remover wrapper e converter para JSON
+        let jsonStr = text.substring(47).slice(0, -2);
+        const json = JSON.parse(jsonStr);
 
-        const rows = json.values || [];
+        // Extrair linhas
+        const rows = json.table.rows || [];
         const data = [];
 
         // Ignorar a primeira linha (cabeçalho)
         for (let i = 1; i < rows.length; i++) { 
           const row = rows[i];
-          if (!row) continue;
+          if (!row.c) continue;
 
           // Converter cada campo para string e limpar
-          let cpf = (row[0]?.toString().trim() || "").replace(/\D/g, '');
-          const nome = (row[1]?.toString().trim() || "");
-          const veiculo = (row[2]?.toString().trim() || "");
-          const placa = (row[3]?.toString().trim() || "");
-          const info = (row[4]?.toString().trim() || "Nenhuma informação disponível no momento.");
-          const endereco = (row[5]?.toString().trim() || ""); // Coluna F
-          const mapsLink = (row[6]?.toString().trim() || ""); // Coluna G
-          const devolucao = (row[7]?.toString().trim() || ""); // Coluna H
-          const hora = (row[8]?.toString().trim() || ""); // Coluna I
+          let cpf = (row.c[0]?.v?.toString().trim() || "").replace(/\D/g, '');
+          const nome = (row.c[1]?.v?.toString().trim() || "");
+          const veiculo = (row.c[2]?.v?.toString().trim() || "");
+          const placa = (row.c[3]?.v?.toString().trim() || "");
+          const info = (row.c[4]?.v?.toString().trim() || "Nenhuma informação disponível no momento.");
+          const endereco = (row.c[5]?.v?.toString().trim() || ""); // Coluna F
+          const mapsLink = (row.c[6]?.v?.toString().trim() || ""); // Coluna G
 
           // Garantir que o CPF tenha 11 dígitos
           while (cpf.length < 11) cpf = "0" + cpf;
 
           // Só adiciona se tiver CPF válido
           if (cpf && cpf.length === 11) {
-            data.push({ cpf, nome, veiculo, placa, info, endereco, mapsLink, devolucao, hora });
+            data.push({ cpf, nome, veiculo, placa, info, endereco, mapsLink });
           }
         }
 
@@ -483,7 +450,7 @@
         return data;
 
       } catch (error) {
-        console.error("❌ Erro ao buscar dados da planilha:", error);
+        console.error("Erro ao buscar dados da planilha:", error);
         showModal('errorModal', 'Erro ao carregar dados. Verifique se a planilha está pública e tem cabeçalho na linha 1.');
         return [];
       }
@@ -527,16 +494,6 @@
       document.getElementById('vehicleName').textContent = user.veiculo;
       document.getElementById('plateNumber').textContent = user.placa;
       document.getElementById('infoText').textContent = user.info;
-
-      // Preencher Devolução (se tiver)
-      const devolutionContainer = document.getElementById('devolutionContainer');
-      if (user.devolucao || user.hora) {
-        devolutionContainer.style.display = 'block';
-        document.getElementById('devolutionDate').textContent = user.devolucao || "Não informado";
-        document.getElementById('devolutionTime').textContent = user.hora || "Não informado";
-      } else {
-        devolutionContainer.style.display = 'none';
-      }
 
       // Configurar endereço e botão de mapa (apenas se houver ENDERECO)
       const addressContainer = document.getElementById('addressContainer');
@@ -637,8 +594,8 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // ✅ Corrigido para funcionar no Sketchware
-      window.location.href = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
+      // ✅ Corrigido para funcionar no Android (Sketchware)
+      window.open(`https://wa.me/55${phoneNumber}?text=${encodedMessage}`, '_blank');
 
       // Fechar modal
       closeModal('assistModal');
@@ -647,8 +604,8 @@
     // Função corrigida para abrir o mapa
     function openMap() {
       if (currentMapUrl) {
-        // ✅ Corrigido para funcionar no Sketchware
-        window.location.href = currentMapUrl;
+        // ✅ Corrigido para funcionar no Android (Sketchware)
+        window.open(currentMapUrl, '_blank');
       } else {
         alert("Link de localização não disponível.");
       }
@@ -727,16 +684,6 @@
           document.getElementById('vehicleName').textContent = user.veiculo;
           document.getElementById('plateNumber').textContent = user.placa;
           document.getElementById('infoText').textContent = user.info;
-
-          // Preencher Devolução (se tiver)
-          const devolutionContainer = document.getElementById('devolutionContainer');
-          if (user.devolucao || user.hora) {
-            devolutionContainer.style.display = 'block';
-            document.getElementById('devolutionDate').textContent = user.devolucao || "Não informado";
-            document.getElementById('devolutionTime').textContent = user.hora || "Não informado";
-          } else {
-            devolutionContainer.style.display = 'none';
-          }
 
           const addressContainer = document.getElementById('addressContainer');
           const addressText = document.getElementById('addressText');
