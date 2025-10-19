@@ -357,29 +357,9 @@
       <button onclick="logout()" class="logout-btn">Sair</button>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Veículo Alocado (2 colunas) -->
-      <div class="card col-span-2">
-        <h2 class="text-xl font-semibold mb-4">Veículo Alocado</h2>
-        <div class="mb-4">
-          <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
-          <p><strong>Placa:</strong> <span id="plateNumber" class="placa">Carregando...</span></p>
-        </div>
-        <div id="infoBox" class="info-box">
-          <strong>Status Operacional:</strong>
-          <p id="infoText">Nenhuma informação disponível no momento.</p>
-        </div>
-        <!-- Campo de Endereço (se houver) -->
-        <div id="addressContainer" style="display:none;">
-          <div class="address-box">
-            <div class="address-title">Localização do Fornecedor</div>
-            <div id="addressText" class="text-sm"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bem-vindo(a), (1 coluna) -->
-      <div class="card user-greeting">
+    <div class="grid grid-cols-1 gap-6">
+      <!-- Bem-vindo(a), (2 colunas) -->
+      <div class="card user-greeting col-span-2">
         <div class="flex justify-between items-start">
           <div>
             <h2 class="text-xl font-semibold mb-4">Bem-vindo(a), <span id="userName">Usuário</span>!</h2>
@@ -405,6 +385,26 @@
             <div class="devolution-title">Data de Devolução Programada</div>
             <p class="devolution-date"><strong>Data:</strong> <span id="devolutionDate">Carregando...</span></p>
             <p class="devolution-date"><strong>Hora:</strong> <span id="devolutionTime">Carregando...</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Veículo Alocado (2 colunas) -->
+      <div class="card col-span-2">
+        <h2 class="text-xl font-semibold mb-4">Veículo Alocado</h2>
+        <div class="mb-4">
+          <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
+          <p><strong>Placa:</strong> <span id="plateNumber" class="placa">Carregando...</span></p>
+        </div>
+        <div id="infoBox" class="info-box">
+          <strong>Status Operacional:</strong>
+          <p id="infoText">Nenhuma informação disponível no momento.</p>
+        </div>
+        <!-- Campo de Endereço (se houver) -->
+        <div id="addressContainer" style="display:none;">
+          <div class="address-box">
+            <div class="address-title">Localização do Fornecedor</div>
+            <div id="addressText" class="text-sm"></div>
           </div>
         </div>
       </div>
