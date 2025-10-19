@@ -7,35 +7,70 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --primary: #d62828;
-      --secondary: #ffc107;
-      --accent: #00aaff;
-      --dark-bg: #000000;
-      --card-bg: #0a0a09;
-      --text-primary: #ffffff;
-      --text-secondary: #cccccc;
+      --primary: #d62828; /* Vermelho */
+      --secondary: #ffc107; /* Dourado */
+      --accent: #00aaff; /* Azul (pode ser usado para destaque secundário) */
+      --dark-bg: #000000; /* Preto */
+      --card-bg: #0a0a09; /* Preto carvão */
+      --text-primary: #ffffff; /* Branco */
+      --text-secondary: #cccccc; /* Cinza claro */
       --border-gold: #ffc107;
       --shadow: rgba(0,0,0,0.5);
+      --gradient-bg: linear-gradient(135deg, #000000, #1a1a1a); /* Gradiente de preto */
     }
 
     body {
-      background: var(--dark-bg);
+      background: var(--gradient-bg);
       color: var(--text-primary);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       transition: background 0.5s ease;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Fundo de carros em movimento */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 193, 7, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(214, 40, 40, 0.05) 0%, transparent 20%),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000000"/><path d="M20,20 L30,30 M70,20 L80,30 M20,70 L30,80 M70,70 L80,80" stroke="%23333" stroke-width="0.5"/></svg>');
+      background-size: cover, cover, 200px;
+      background-position: center, center, center;
+      background-attachment: fixed;
+      opacity: 0.15;
+      z-index: -1;
+      animation: bgMove 30s linear infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0 0, 0 0, 0 0; }
+      100% { background-position: 100vw 100vh, 100vw 100vh, 0 0; }
     }
 
     .vs-logo {
       width: 120px;
       height: auto;
       filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      animation: logoFloat 3s ease-in-out infinite;
     }
     .vs-logo:hover {
-      transform: scale(1.02);
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 12px rgba(255, 193, 7, 0.8));
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     .card {
@@ -44,16 +79,33 @@
       border-radius: 16px;
       padding: 24px;
       box-shadow: 0 8px 32px var(--shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       animation: fadeInUp 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
     }
     .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 40px rgba(255, 255, 255, 0.1);
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 12px 40px rgba(255, 255, 255, 0.15);
+      border-color: var(--primary);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.1), transparent);
+      transition: left 0.5s;
+    }
+    .card:hover::before {
+      left: 100%;
     }
 
     .info-box {
-      background: #111;
+      background: rgba(255, 255, 255, 0.05);
       border-left: 4px solid var(--border-gold);
       padding: 16px;
       margin-top: 16px;
@@ -67,6 +119,11 @@
       font-size: 1.3rem;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      border: 1px solid var(--secondary);
     }
 
     .loading {
@@ -84,29 +141,51 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.85);
+      background-color: rgba(0,0,0,0.9);
       justify-content: center;
       align-items: center;
       animation: fadeIn 0.3s ease;
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
-      background: #0f0c14;
+      background: linear-gradient(145deg, var(--card-bg), #1a1a1a);
       padding: 24px;
       border-radius: 16px;
       max-width: 90%;
       width: 400px;
       text-align: center;
-      box-shadow: 0 0 32px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(214, 40, 40, 0.3);
       border: 1px solid var(--border-gold);
       animation: slideIn 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-content::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--secondary), var(--primary), var(--secondary));
+      z-index: -1;
+      border-radius: 18px; /* Um pouco maior que o conteúdo para o efeito */
+      animation: borderAnimation 3s linear infinite;
+    }
+
+    @keyframes borderAnimation {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
     }
 
     .modal-header {
       font-size: 1.5rem;
-      color: var(--primary);
+      color: var(--secondary);
       margin-bottom: 12px;
       font-weight: 600;
+      text-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
     }
 
     .modal-body {
@@ -121,9 +200,9 @@
     }
 
     .btn-close {
-      background: #1a1622;
+      background: rgba(255,255,255,0.1);
       color: white;
-      border: 1px solid var(--border-gold);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
@@ -137,7 +216,7 @@
     }
 
     .btn-send {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--primary), #a72222);
       color: white;
       border: none;
       padding: 8px 16px;
@@ -145,14 +224,17 @@
       cursor: pointer;
       transition: all 0.2s ease;
       font-weight: 500;
+      box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
     }
 
     .btn-send:hover {
-      background: #33bbff;
+      background: linear-gradient(135deg, #a72222, var(--primary));
+      box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
+      transform: scale(1.05);
     }
 
     .address-box {
-      background: #111;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-gold);
       border-radius: 8px;
       padding: 12px;
@@ -167,7 +249,7 @@
     }
 
     .weather-box {
-      background: #111;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-gold);
       border-radius: 8px;
       padding: 12px;
@@ -234,6 +316,7 @@
     .logout-btn:hover {
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
+      border-color: var(--secondary);
     }
 
     /* Estilo para a data e hora moderna */
@@ -249,6 +332,13 @@
       letter-spacing: 0.5px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.2); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
     }
 
     .modern-datetime span {
@@ -326,24 +416,26 @@
     }
   </style>
 </head>
-<body class="min-h-screen bg-black text-white">
+<body class="min-h-screen text-white">
 
   <!-- Login Screen -->
-  <div id="loginScreen" class="flex flex-col items-center justify-center min-h-screen p-6">
+  <div id="loginScreen" class="flex flex-col items-center justify-center min-h-screen p-6 relative z-10">
     <img src="https://res.cloudinary.com/degs0c0bo/image/upload/v1760829505/WhatsApp_Image_2025-10-18_at_20.14.46-removebg-preview_uvu40a.png" alt="VS Drive Logo" class="vs-logo mb-6" />
-    <h1 class="text-3xl font-bold mb-4">VS Drive</h1>
-    <p class="text-gray-400 mb-8">Sistema de Gestão de Frota Corporativa</p>
+    <h1 class="text-3xl font-bold mb-4 text-center">VS Drive</h1>
+    <p class="text-gray-400 mb-8 text-center">Sistema de Gestão de Frota Corporativa</p>
 
     <div class="w-full max-w-md">
       <input 
         type="text" 
         id="cpfInput" 
         placeholder="Informe seu CPF (somente números)" 
-        class="w-full p-3 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 mb-4"
+        class="w-full p-3 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 mb-4 transition-all duration-300"
         maxlength="11"
         oninput="this.value = this.value.replace(/[^0-9]/g, '')"
       />
-      <button onclick="login()" class="btn-primary w-full">Acessar Conta Corporativa</button>
+      <button onclick="login()" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-red-700 to-red-900 text-white font-bold text-lg shadow-lg hover:from-red-800 hover:to-red-950 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+        Acessar Conta Corporativa
+      </button>
     </div>
   </div>
 
@@ -459,22 +551,18 @@
     let currentMapUrl = "";
     let assistType = "";
 
-    // Função para formatar a data e hora de forma corporativa e moderna
+    // Função para formatar a data e hora de forma corporativa e moderna (SEM HORA)
     function updateDateTime() {
       const now = new Date();
       const options = { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        day: 'numeric'
       };
       const formattedDate = now.toLocaleDateString('pt-BR', options);
-      const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      
-      // Formato profissional: "Hoje, 19 de outubro de 2025 | 17:01"
-      document.getElementById('dateTime').textContent = `Hoje, ${formattedDate.split(', ')[1]} | ${time}`;
+      // Formato profissional: "Hoje, 19 de outubro de 2025"
+      document.getElementById('dateTime').textContent = `Hoje, ${formattedDate.split(', ')[1]}`;
     }
 
     // Função para buscar dados da planilha via API v4
@@ -795,3 +883,4 @@
 
 </body>
 </html>
+
