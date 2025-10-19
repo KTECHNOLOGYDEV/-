@@ -205,6 +205,7 @@
       font-size: 1.1rem;
       color: #cccccc;
       margin-bottom: 8px;
+      text-align: center;
     }
     @keyframes fadeInUp {
       from {
@@ -242,6 +243,34 @@
     .logout-btn:hover {
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
+    }
+    /* Novo: Estilo para os botões de Atendimento */
+    .btn-renew {
+      background: #00aaff;
+      color: white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
+      margin-right: 8px;
+    }
+    .btn-renew:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+    }
+    .btn-help {
+      background: #28a745;
+      color: white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    .btn-help:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
     }
   </style>
 </head>
@@ -390,31 +419,27 @@
   </div>
 
   <script>
-    // ✅ URL da API v4 do Google Sheets
+    // ✅ URL da API v4 do Google Sheets (com a chave correta)
     const sheetUrl = "https://sheets.googleapis.com/v4/spreadsheets/1mHnFnVJnCjqp7dyA8Ruh2O75CTkRVMd9l-7pl-FAf_4/values/A1:I1000?key=AIzaSyABsTa--YQp1SiL_2fPtAc7HDzT8oTkrIk";
 
     let currentMapUrl = "";
     let assistType = "";
 
-    // Função para formatar a data e hora
+    // Função para formatar a data e hora de forma corporativa
     function updateDateTime() {
       const now = new Date();
-      const options = { 
-        weekday: 'short', // abreviado: 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      };
-      const formatted = now.toLocaleDateString('pt-BR', options);
-      // Exemplo: "sáb, 18 de outubro de 2025 às 20:50:35"
-      // Vamos formatar para: "São: 20:50, hoje é dia 18 de outubro - Sáb"
-      const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      const date = `${now.getDate()} de ${now.toLocaleDateString('pt-BR', { month: 'long' })}`;
-      const weekday = now.toLocaleDateString('pt-BR', { weekday: 'short' }).toUpperCase(); // "SÁB"
-      document.getElementById('dateTime').textContent = `São: ${time}, hoje é dia ${date} - ${weekday}`;
+      const months = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+
+      const day = now.getDate();
+      const month = months[now.getMonth()];
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+
+      document.getElementById('dateTime').textContent = `Camaçari, ${day} de ${month} de ${year} - ${hours}:${minutes}`;
     }
 
     // Função para buscar dados da planilha via API v4
@@ -638,9 +663,10 @@
           const temp = Math.round(data.main.temp);
           const description = data.weather[0].description;
           const icon = data.weather[0].icon;
+          // ✅ Corrigido para funcionar em webviews Android
           const weatherHtml = `
-            <div class="flex items-center">
-              <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="w-10 h-10 mr-2" />
+            <div class="flex items-center justify-center">
+              <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="w-10 h-10 mr-2" onerror="this.src='https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/${icon}.png';this.onerror=null;" />
               <span>${temp}°C • ${description}</span>
             </div>
           `;
