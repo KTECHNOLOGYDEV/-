@@ -604,7 +604,7 @@
       document.getElementById('assistModal').style.display = 'flex';
     }
 
-    // ✅ Função corrigida para abrir o WhatsApp com fallback robusto
+    // ✅ Função corrigida para abrir o WhatsApp com intent://
     function sendWhatsApp() {
       const description = document.getElementById('problemDescription').value.trim();
       if (!description) {
@@ -629,7 +629,7 @@
       // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message);
 
-      // Abrir WhatsApp com número e mensagem
+      // Abrir WhatsApp com número e mensagem usando intent://
       let phoneNumber = '75998604867'; // Para SOS
       if (assistType === 'report') {
         phoneNumber = '71997031548'; // Para Manutenção
@@ -638,35 +638,32 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // Monta a URL do WhatsApp
-      const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
+      // Monta a URL com intent:// para Android
+      const whatsappIntentUrl = `intent://send?phone=55${phoneNumber}&text=${encodedMessage}&amp;package=com.whatsapp&amp;S.browser_fallback_url=https%3A%2F%2Fwa.me%2F55${phoneNumber}%3Ftext%3D${encodedMessage}#Intent;scheme=https;package=com.whatsapp;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
 
-      // --- Técnica Robusta para Abrir Externamente ---
-      // Cria um link temporário
-      const link = document.createElement('a');
-      link.href = whatsappUrl;
-      link.target = '_blank'; // Tenta abrir em nova aba (ou app)
-      link.rel = 'noopener noreferrer'; // Boa prática de segurança
-      document.body.appendChild(link); // Adiciona ao DOM temporariamente
-      link.click(); // Simula o clique
-      document.body.removeChild(link); // Remove o link temporário
+      // Abre o link
+      window.location.href = whatsappIntentUrl;
 
       // Fechar modal
       closeModal('assistModal');
     }
 
-    // ✅ Função corrigida para abrir o mapa com fallback robusto
+    // ✅ Função corrigida para abrir o mapa com intent://
     function openMap() {
       if (currentMapUrl) {
-        // --- Técnica Robusta para Abrir Externamente ---
-        // Cria um link temporário
-        const link = document.createElement('a');
-        link.href = currentMapUrl;
-        link.target = '_blank'; // Tenta abrir em nova aba (ou app)
-        link.rel = 'noopener noreferrer'; // Boa prática de segurança
-        document.body.appendChild(link); // Adiciona ao DOM temporariamente
-        link.click(); // Simula o clique
-        document.body.removeChild(link); // Remove o link temporário
+        // Monta a URL com intent:// para Android
+        let mapIntentUrl = '';
+
+        if (currentMapUrl.includes('waze.com')) {
+          // Intent para Waze
+          mapIntentUrl = `intent://www.waze.com/ul?ll=${currentMapUrl.split('ll=')[1].split('&')[0]}&navigate=yes#Intent;scheme=https;package=com.waze;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
+        } else {
+          // Intent para Google Maps
+          mapIntentUrl = `intent://maps.google.com/maps?q=${encodeURIComponent(currentMapUrl)}&amp;package=com.google.android.apps.maps&amp;S.browser_fallback_url=https%3A%2F%2Fmaps.google.com%2Fmaps%3Fq%3D${encodeURIComponent(currentMapUrl)}#Intent;scheme=https;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
+        }
+
+        // Abre o link
+        window.location.href = mapIntentUrl;
       } else {
         alert("Link de localização não disponível.");
       }
