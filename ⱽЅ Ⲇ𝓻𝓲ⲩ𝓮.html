@@ -604,7 +604,7 @@
       document.getElementById('assistModal').style.display = 'flex';
     }
 
-    // ✅ Função corrigida para abrir o WhatsApp com intent://
+    // ✅ Função corrigida para abrir o WhatsApp com window.open()
     function sendWhatsApp() {
       const description = document.getElementById('problemDescription').value.trim();
       if (!description) {
@@ -629,7 +629,7 @@
       // Codificar mensagem para URL
       const encodedMessage = encodeURIComponent(message);
 
-      // Abrir WhatsApp com número e mensagem usando intent://
+      // Abrir WhatsApp com número e mensagem
       let phoneNumber = '75998604867'; // Para SOS
       if (assistType === 'report') {
         phoneNumber = '71997031548'; // Para Manutenção
@@ -638,32 +638,29 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // Monta a URL com intent:// para Android
-      const whatsappIntentUrl = `intent://send?phone=55${phoneNumber}&text=${encodedMessage}&amp;package=com.whatsapp&amp;S.browser_fallback_url=https%3A%2F%2Fwa.me%2F55${phoneNumber}%3Ftext%3D${encodedMessage}#Intent;scheme=https;package=com.whatsapp;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
+      // Monta a URL do WhatsApp
+      const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
 
-      // Abre o link
-      window.location.href = whatsappIntentUrl;
+      // Tenta abrir com window.open
+      const opened = window.open(whatsappUrl, '_blank');
+      if (!opened) {
+        // Se window.open falhar, tenta window.location.href
+        window.location.href = whatsappUrl;
+      }
 
       // Fechar modal
       closeModal('assistModal');
     }
 
-    // ✅ Função corrigida para abrir o mapa com intent://
+    // ✅ Função corrigida para abrir o mapa com window.open()
     function openMap() {
       if (currentMapUrl) {
-        // Monta a URL com intent:// para Android
-        let mapIntentUrl = '';
-
-        if (currentMapUrl.includes('waze.com')) {
-          // Intent para Waze
-          mapIntentUrl = `intent://www.waze.com/ul?ll=${currentMapUrl.split('ll=')[1].split('&')[0]}&navigate=yes#Intent;scheme=https;package=com.waze;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
-        } else {
-          // Intent para Google Maps
-          mapIntentUrl = `intent://maps.google.com/maps?q=${encodeURIComponent(currentMapUrl)}&amp;package=com.google.android.apps.maps&amp;S.browser_fallback_url=https%3A%2F%2Fmaps.google.com%2Fmaps%3Fq%3D${encodeURIComponent(currentMapUrl)}#Intent;scheme=https;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end`;
+        // Tenta abrir com window.open
+        const opened = window.open(currentMapUrl, '_blank');
+        if (!opened) {
+          // Se window.open falhar, tenta window.location.href
+          window.location.href = currentMapUrl;
         }
-
-        // Abre o link
-        window.location.href = mapIntentUrl;
       } else {
         alert("Link de localização não disponível.");
       }
