@@ -633,7 +633,9 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      window.open(`https://wa.me/55${phoneNumber}?text=${encodedMessage}`, '_blank');
+      // ✅ Correção para Sketchware: usar window.location.href
+      const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
+      window.location.href = whatsappUrl;
 
       // Fechar modal
       closeModal('assistModal');
@@ -642,7 +644,7 @@
     // Função corrigida para abrir o mapa
     function openMap() {
       if (currentMapUrl) {
-        // ✅ Correção para Android: usar intent://
+        // ✅ Correção para Sketchware: usar window.location.href
         const androidIntent = `intent://maps/dir//${encodeURIComponent(currentMapUrl)}#Intent;scheme=google.navigation;package=com.google.android.apps.maps;end`;
         window.location.href = androidIntent;
       } else {
