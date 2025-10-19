@@ -57,6 +57,33 @@
       transform: scale(1.05);
       box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
     }
+    .btn-renew {
+      background: #00aaff;
+      color: white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
+      margin-right: 8px;
+    }
+    .btn-renew:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+    }
+    .btn-help {
+      background: #28a745;
+      color: white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    .btn-help:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+    }
     .card {
       background: #0a0a0a;
       border: 1px solid #ffc107;
@@ -244,34 +271,6 @@
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
     }
-    /* Novo: Estilo para os botões de Atendimento */
-    .btn-renew {
-      background: #00aaff;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
-      margin-right: 8px;
-    }
-    .btn-renew:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
-    }
-    .btn-help {
-      background: #28a745;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-    .btn-help:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
-    }
   </style>
 </head>
 <body class="min-h-screen bg-black text-white">
@@ -306,7 +305,35 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- User Info Card (Bem-vindo) -->
+      <!-- Vehicle Info Card -->
+      <div class="card">
+        <h2 class="text-xl font-semibold mb-4">Informações do Veículo</h2>
+        <div class="mb-4">
+          <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
+          <p><strong>Placa:</strong> <span id="plateNumber" class="placa">Carregando...</span></p>
+        </div>
+        <div id="infoBox" class="info-box">
+          <strong>Avisos e Manutenções:</strong>
+          <p id="infoText">Nenhuma informação disponível no momento.</p>
+        </div>
+        <!-- Campo de Endereço (se houver) -->
+        <div id="addressContainer" style="display:none;">
+          <div class="address-box">
+            <div class="address-title">Endereço do Fornecedor</div>
+            <div id="addressText" class="text-sm"></div>
+          </div>
+          <button id="mapButton" class="map-button mt-2" onclick="openMap()">Ver Localização</button>
+        </div>
+
+        <!-- Assistência -->
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold mb-3">Assistência</h3>
+          <button onclick="openAssistModal('sos')" class="btn-sos">SOS 24Hrs</button>
+          <button onclick="openAssistModal('report')" class="btn-report">Manutenção</button>
+        </div>
+      </div>
+
+      <!-- User Info Card -->
       <div class="card user-greeting">
         <div class="flex justify-between items-start">
           <div>
@@ -344,34 +371,6 @@
             <p><strong>Data:</strong> <span id="devolutionDate">Carregando...</span></p>
             <p><strong>Hora:</strong> <span id="devolutionTime">Carregando...</span></p>
           </div>
-        </div>
-      </div>
-
-      <!-- Vehicle Info Card -->
-      <div class="card">
-        <h2 class="text-xl font-semibold mb-4">Informações do Veículo</h2>
-        <div class="mb-4">
-          <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
-          <p><strong>Placa:</strong> <span id="plateNumber" class="placa">Carregando...</span></p>
-        </div>
-        <div id="infoBox" class="info-box">
-          <strong>Avisos e Manutenções:</strong>
-          <p id="infoText">Nenhuma informação disponível no momento.</p>
-        </div>
-        <!-- Campo de Endereço (se houver) -->
-        <div id="addressContainer" style="display:none;">
-          <div class="address-box">
-            <div class="address-title">Endereço do Fornecedor</div>
-            <div id="addressText" class="text-sm"></div>
-          </div>
-          <button id="mapButton" class="map-button mt-2" onclick="openMap()">Ver Localização</button>
-        </div>
-
-        <!-- Assistência -->
-        <div class="mt-6">
-          <h3 class="text-lg font-semibold mb-3">Assistência</h3>
-          <button onclick="openAssistModal('sos')" class="btn-sos">SOS 24Hrs</button>
-          <button onclick="openAssistModal('report')" class="btn-report">Manutenção</button>
         </div>
       </div>
     </div>
@@ -428,18 +427,22 @@
     // Função para formatar a data e hora de forma corporativa
     function updateDateTime() {
       const now = new Date();
-      const months = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-      ];
-
-      const day = now.getDate();
-      const month = months[now.getMonth()];
-      const year = now.getFullYear();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-
-      document.getElementById('dateTime').textContent = `Camaçari, ${day} de ${month} de ${year} - ${hours}:${minutes}`;
+      const options = { 
+        weekday: 'short', // abreviado: 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      };
+      const formatted = now.toLocaleDateString('pt-BR', options);
+      // Exemplo: "sáb, 18 de outubro de 2025 às 20:50:35"
+      // Vamos formatar para: "São: 20:50, hoje é dia 18 de outubro - Sáb"
+      const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      const date = `${now.getDate()} de ${now.toLocaleDateString('pt-BR', { month: 'long' })}`;
+      const weekday = now.toLocaleDateString('pt-BR', { weekday: 'short' }).toUpperCase(); // "SÁB"
+      document.getElementById('dateTime').textContent = `São: ${time}, hoje é dia ${date} - ${weekday}`;
     }
 
     // Função para buscar dados da planilha via API v4
@@ -452,19 +455,20 @@
         const data = [];
 
         // Ignorar a primeira linha (cabeçalho)
-        for (let i = 1; i < rows.length; i++) {
+        for (let i = 1; i < rows.length; i++) { 
           const row = rows[i];
           if (!row) continue;
 
+          // Converter cada campo para string e limpar
           let cpf = (row[0]?.toString().trim() || "").replace(/\D/g, '');
-          const nome = row[1] || "";
-          const veiculo = row[2] || "";
-          const placa = row[3] || "";
-          const info = row[4] || "Nenhuma informação disponível no momento.";
-          const endereco = row[5] || ""; // Coluna F
-          const mapsLink = row[6] || ""; // Coluna G
-          const devolucao = row[7] || ""; // Coluna H
-          const hora = row[8] || ""; // Coluna I
+          const nome = (row[1]?.toString().trim() || "");
+          const veiculo = (row[2]?.toString().trim() || "");
+          const placa = (row[3]?.toString().trim() || "");
+          const info = (row[4]?.toString().trim() || "Nenhuma informação disponível no momento.");
+          const endereco = (row[5]?.toString().trim() || ""); // Coluna F
+          const mapsLink = (row[6]?.toString().trim() || ""); // Coluna G
+          const devolucao = (row[7]?.toString().trim() || ""); // Coluna H
+          const hora = (row[8]?.toString().trim() || ""); // Coluna I
 
           // Garantir que o CPF tenha 11 dígitos
           while (cpf.length < 11) cpf = "0" + cpf;
@@ -480,7 +484,7 @@
 
       } catch (error) {
         console.error("❌ Erro ao buscar dados da planilha:", error);
-        showModal('errorModal', 'Erro ao carregar dados. Verifique se a planilha está pública e a chave de API está correta.');
+        showModal('errorModal', 'Erro ao carregar dados. Verifique se a planilha está pública e tem cabeçalho na linha 1.');
         return [];
       }
     }
@@ -633,9 +637,8 @@
         phoneNumber = '7138790001'; // Para Atendimento
       }
 
-      // ✅ Correção para Sketchware: usar window.location.href
-      const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
-      window.location.href = whatsappUrl;
+      // ✅ Corrigido para funcionar no Sketchware
+      window.location.href = `https://wa.me/55${phoneNumber}?text=${encodedMessage}`;
 
       // Fechar modal
       closeModal('assistModal');
@@ -644,9 +647,8 @@
     // Função corrigida para abrir o mapa
     function openMap() {
       if (currentMapUrl) {
-        // ✅ Correção para Sketchware: usar window.location.href
-        const androidIntent = `intent://maps/dir//${encodeURIComponent(currentMapUrl)}#Intent;scheme=google.navigation;package=com.google.android.apps.maps;end`;
-        window.location.href = androidIntent;
+        // ✅ Corrigido para funcionar no Sketchware
+        window.location.href = currentMapUrl;
       } else {
         alert("Link de localização não disponível.");
       }
@@ -667,10 +669,9 @@
           const temp = Math.round(data.main.temp);
           const description = data.weather[0].description;
           const icon = data.weather[0].icon;
-          // ✅ Corrigido para funcionar em webviews Android
           const weatherHtml = `
-            <div class="flex items-center justify-center">
-              <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="w-10 h-10 mr-2" onerror="this.src='https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/${icon}.png';this.onerror=null;" />
+            <div class="flex items-center">
+              <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="w-10 h-10 mr-2" />
               <span>${temp}°C • ${description}</span>
             </div>
           `;
