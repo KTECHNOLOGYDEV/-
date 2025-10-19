@@ -3,93 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VS Drive - Locadora de Veículos</title>
+  <title>VS Drive - Sistema de Gestão de Frota Corporativa</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --primary: #d62828;
+      --secondary: #ffc107;
+      --accent: #00aaff;
+      --dark-bg: #000000;
+      --card-bg: #0a0a09;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --border-gold: #ffc107;
+      --shadow: rgba(0,0,0,0.5);
+    }
+
     body {
-      background: #000000;
-      color: #ffffff;
+      background: var(--dark-bg);
+      color: var(--text-primary);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       transition: background 0.5s ease;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
+
     .vs-logo {
       width: 120px;
       height: auto;
       filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+      transition: transform 0.3s ease;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #d62828, #a72222);
-      color: white;
-      border-radius: 12px;
-      padding: 12px 24px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
+    .vs-logo:hover {
+      transform: scale(1.02);
     }
-    .btn-primary:hover {
-      transform: scale(1.05) translateY(-2px);
-      box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
-    }
-    .btn-sos {
-      background: #d62828;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
-      margin-right: 8px;
-    }
-    .btn-sos:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
-    }
-    .btn-report {
-      background: #ffc107;
-      color: #000000;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-    }
-    .btn-report:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
-    }
-    .btn-renew {
-      background: #00aaff;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.3);
-      margin-right: 8px;
-    }
-    .btn-renew:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
-    }
-    .btn-help {
-      background: #28a745;
-      color: white;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-    .btn-help:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
-    }
+
     .card {
-      background: #0a0a0a;
-      border: 1px solid #ffc107;
+      background: var(--card-bg);
+      border: 1px solid var(--border-gold);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 32px var(--shadow);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: fadeInUp 0.6s ease-out;
     }
@@ -97,26 +51,31 @@
       transform: translateY(-6px) scale(1.02);
       box-shadow: 0 12px 40px rgba(255, 255, 255, 0.1);
     }
+
     .info-box {
       background: #111;
-      border-left: 4px solid #ffc107;
+      border-left: 4px solid var(--border-gold);
       padding: 16px;
       margin-top: 16px;
       border-radius: 8px;
       animation: fadeIn 0.5s ease-out;
     }
+
     .placa {
       font-weight: bold;
-      color: #ffc107;
+      color: var(--secondary);
       font-size: 1.3rem;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
+
     .loading {
       text-align: center;
       padding: 20px;
       font-size: 1.2rem;
-      color: #ccc;
+      color: var(--text-secondary);
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -125,11 +84,12 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.8);
+      background-color: rgba(0,0,0,0.85);
       justify-content: center;
       align-items: center;
       animation: fadeIn 0.3s ease;
     }
+
     .modal-content {
       background: #0f0c14;
       padding: 24px;
@@ -138,102 +98,98 @@
       width: 400px;
       text-align: center;
       box-shadow: 0 0 32px rgba(255, 255, 255, 0.1);
-      border: 1px solid #ffc107;
+      border: 1px solid var(--border-gold);
       animation: slideIn 0.4s ease;
     }
+
     .modal-header {
       font-size: 1.5rem;
-      color: #d62828;
+      color: var(--primary);
       margin-bottom: 12px;
+      font-weight: 600;
     }
+
     .modal-body {
       margin-bottom: 20px;
-      color: #ffffff;
+      color: var(--text-primary);
     }
+
     .modal-footer {
       display: flex;
       justify-content: center;
       gap: 10px;
     }
+
     .btn-close {
       background: #1a1622;
       color: white;
-      border: 1px solid #ffc107;
+      border: 1px solid var(--border-gold);
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-weight: 500;
     }
+
     .btn-close:hover {
-      background: #ffc107;
+      background: var(--secondary);
       color: #000000;
     }
+
     .btn-send {
-      background: #00aaff;
+      background: var(--accent);
       color: white;
       border: none;
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
+      font-weight: 500;
     }
+
     .btn-send:hover {
       background: #33bbff;
     }
-    .map-button {
-      background: #ffc107;
-      color: #000000;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      margin-top: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-block;
-    }
-    .map-button:hover {
-      background: #ffcc00;
-      transform: scale(1.05);
-    }
-    .waze-button {
-      background: #00aaff;
-    }
-    .waze-button:hover {
-      background: #33bbff;
-    }
+
     .address-box {
       background: #111;
-      border: 1px solid #ffc107;
+      border: 1px solid var(--border-gold);
       border-radius: 8px;
       padding: 12px;
       margin-top: 16px;
     }
+
     .address-title {
       font-weight: bold;
-      color: #ffc107;
+      color: var(--secondary);
       margin-bottom: 8px;
       font-size: 1.1rem;
     }
+
     .weather-box {
       background: #111;
-      border: 1px solid #ffc107;
+      border: 1px solid var(--border-gold);
       border-radius: 8px;
       padding: 12px;
       margin-top: 16px;
     }
+
     .weather-title {
       font-weight: bold;
-      color: #ffc107;
+      color: var(--secondary);
       margin-bottom: 8px;
       font-size: 1.1rem;
     }
+
     .date-time {
       font-size: 1.1rem;
-      color: #cccccc;
+      color: var(--text-secondary);
       margin-bottom: 8px;
       text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -244,10 +200,12 @@
         transform: translateY(0);
       }
     }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
     @keyframes slideIn {
       from {
         transform: translateY(30px);
@@ -258,18 +216,164 @@
         opacity: 1;
       }
     }
+
     .user-greeting {
       animation: fadeIn 0.8s ease-out;
     }
+
     .logout-btn {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       transition: all 0.3s ease;
-      color: #ffffff;
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 500;
     }
+
     .logout-btn:hover {
       background: rgba(255,255,255,0.2);
       transform: scale(1.05);
+    }
+
+    /* Estilo para a seção de assistência */
+    .assistance-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .assist-button {
+      background: linear-gradient(135deg, var(--secondary), #e6b400);
+      color: #000000;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+      min-width: 140px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .assist-button:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+      background: linear-gradient(135deg, #ffd633, #e6b400);
+    }
+
+    .assist-button i {
+      margin-right: 8px;
+      font-size: 1.1rem;
+    }
+
+    /* Estilo para a data e hora moderna */
+    .modern-datetime {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 16px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .modern-datetime span {
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    /* Estilo para a previsão do tempo */
+    .weather-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
+
+    .weather-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+
+    /* Estilo para a dica de segurança */
+    .safety-tip {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      border-left: 3px solid var(--secondary);
+    }
+
+    /* Estilo para o container de devolução */
+    .devolution-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .devolution-title {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .devolution-date {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 4px 0;
+    }
+
+    /* Estilo para o cabeçalho da seção de atendimento */
+    .service-header {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    /* Estilo para o footer */
+    .footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .card {
+        padding: 16px;
+      }
+      .assistance-section {
+        flex-direction: column;
+      }
+      .assist-button {
+        min-width: 100%;
+      }
+      .modern-datetime {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -277,9 +381,9 @@
 
   <!-- Login Screen -->
   <div id="loginScreen" class="flex flex-col items-center justify-center min-h-screen p-6">
-    <img src="https://res.cloudinary.com/degs0c0bo/image/upload/v1760829505/WhatsApp_Image_2025-10-18_at_20.14.46-removebg-preview_uvu40a.png" alt="VS Locar Logo" class="vs-logo mb-6" />
+    <img src="https://res.cloudinary.com/degs0c0bo/image/upload/v1760829505/WhatsApp_Image_2025-10-18_at_20.14.46-removebg-preview_uvu40a.png" alt="VS Drive Logo" class="vs-logo mb-6" />
     <h1 class="text-3xl font-bold mb-4">VS Drive</h1>
-    <p class="text-gray-400 mb-8">Acesse sua conta para gerenciar seu veículo</p>
+    <p class="text-gray-400 mb-8">Sistema de Gestão de Frota Corporativa</p>
 
     <div class="w-full max-w-md">
       <input 
@@ -290,7 +394,7 @@
         maxlength="11"
         oninput="this.value = this.value.replace(/[^0-9]/g, '')"
       />
-      <button onclick="login()" class="btn-primary w-full">Acessar Minha Conta</button>
+      <button onclick="login()" class="btn-primary w-full">Acessar Conta Corporativa</button>
     </div>
   </div>
 
@@ -298,38 +402,30 @@
   <div id="dashboardScreen" class="hidden p-4">
     <header class="flex justify-between items-center mb-6">
       <div class="flex items-center space-x-4">
-        <img src="https://res.cloudinary.com/degs0c0bo/image/upload/v1760829505/WhatsApp_Image_2025-10-18_at_20.14.46-removebg-preview_uvu40a.png" alt="VS Locar Logo" class="vs-logo" />
+        <img src="https://res.cloudinary.com/degs0c0bo/image/upload/v1760829505/WhatsApp_Image_2025-10-18_at_20.14.46-removebg-preview_uvu40a.png" alt="VS Drive Logo" class="vs-logo" />
         <h1 class="text-2xl font-bold">VS Drive</h1>
       </div>
-      <button onclick="logout()" class="logout-btn px-4 py-2 rounded-lg">Sair</button>
+      <button onclick="logout()" class="logout-btn">Sair</button>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Vehicle Info Card -->
       <div class="card">
-        <h2 class="text-xl font-semibold mb-4">Informações do Veículo</h2>
+        <h2 class="text-xl font-semibold mb-4">Veículo Alocado</h2>
         <div class="mb-4">
           <p><strong>Modelo:</strong> <span id="vehicleName">Carregando...</span></p>
           <p><strong>Placa:</strong> <span id="plateNumber" class="placa">Carregando...</span></p>
         </div>
         <div id="infoBox" class="info-box">
-          <strong>Avisos e Manutenções:</strong>
+          <strong>Status Operacional:</strong>
           <p id="infoText">Nenhuma informação disponível no momento.</p>
         </div>
         <!-- Campo de Endereço (se houver) -->
         <div id="addressContainer" style="display:none;">
           <div class="address-box">
-            <div class="address-title">Endereço do Fornecedor</div>
+            <div class="address-title">Localização do Fornecedor</div>
             <div id="addressText" class="text-sm"></div>
           </div>
-          <button id="mapButton" class="map-button mt-2" onclick="openMap()">Ver Localização</button>
-        </div>
-
-        <!-- Assistência -->
-        <div class="mt-6">
-          <h3 class="text-lg font-semibold mb-3">Assistência</h3>
-          <button onclick="openAssistModal('sos')" class="btn-sos">SOS 24Hrs</button>
-          <button onclick="openAssistModal('report')" class="btn-report">Manutenção</button>
         </div>
       </div>
 
@@ -338,46 +434,36 @@
         <div class="flex justify-between items-start">
           <div>
             <h2 class="text-xl font-semibold mb-4">Bem-vindo(a), <span id="userName">Usuário</span>!</h2>
-            <p class="text-gray-300 mb-4">Seu veículo está disponível para uso. Mantenha-se atento a eventuais notificações e manutenções programadas.</p>
+            <p class="text-gray-300 mb-4">Seu veículo corporativo está disponível para uso. Mantenha-se atento às notificações e manutenções programadas para garantir a operação contínua e segura.</p>
           </div>
         </div>
 
-        <!-- Atendimento -->
-        <div class="mt-4">
-          <h3 class="text-lg font-semibold mb-3">Atendimento</h3>
-          <button onclick="openAssistModal('renew')" class="btn-renew">Renovar Contrato</button>
-          <button onclick="openAssistModal('help')" class="btn-help">Tirar Dúvidas</button>
-        </div>
-
-        <!-- Data e Hora -->
-        <div class="date-time mt-4" id="dateTime">Carregando data e hora...</div>
+        <!-- Data e Hora Moderna -->
+        <div class="modern-datetime" id="dateTime">Carregando data e hora...</div>
 
         <!-- Previsão do Tempo -->
         <div class="weather-box mt-4">
           <div class="weather-title">Condições Climáticas em Camaçari, BA</div>
-          <div id="weatherInfo" class="text-sm">Carregando previsão...</div>
+          <div class="weather-info" id="weatherInfo">Carregando previsão...</div>
         </div>
 
         <!-- Dica de Segurança -->
-        <div class="mt-4">
-          <strong>Dica de Segurança:</strong>
-          <p id="safetyTip" class="text-sm">Sem dica disponível.</p>
-        </div>
+        <div class="safety-tip" id="safetyTip">Sem dica disponível.</div>
 
         <!-- Devolução -->
         <div id="devolutionContainer" style="display:none;" class="mt-4">
           <div class="devolution-box">
-            <div class="devolution-title">Data e Horário de Devolução</div>
-            <p><strong>Data:</strong> <span id="devolutionDate">Carregando...</span></p>
-            <p><strong>Hora:</strong> <span id="devolutionTime">Carregando...</span></p>
+            <div class="devolution-title">Data de Devolução Programada</div>
+            <p class="devolution-date"><strong>Data:</strong> <span id="devolutionDate">Carregando...</span></p>
+            <p class="devolution-date"><strong>Hora:</strong> <span id="devolutionTime">Carregando...</span></p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="mt-10 text-center text-gray-500 text-sm">
-      VS Locar © 2025 — Sistema de Gestão de Frota
+    <footer class="footer">
+      VS Drive © 2025 — Sistema de Gestão de Frota Corporativa
     </footer>
   </div>
 
@@ -390,7 +476,7 @@
       </div>
       <div class="modal-footer">
         <button onclick="closeModal('assistModal')" class="btn-close">Cancelar</button>
-        <button onclick="sendWhatsApp()" class="btn-send">Enviar</button>
+        <button onclick="sendWhatsApp()" class="btn-send">Enviar Solicitação</button>
       </div>
     </div>
   </div>
@@ -398,8 +484,8 @@
   <!-- Modal de Erro -->
   <div id="errorModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">Atenção</div>
-      <div class="modal-body" id="errorMessage">Ocorreu um erro inesperado.</div>
+      <div class="modal-header">Acesso Restrito</div>
+      <div class="modal-body" id="errorMessage">Credenciais inválidas ou acesso não autorizado.</div>
       <div class="modal-footer">
         <button onclick="closeModal('errorModal')" class="btn-close">Fechar</button>
       </div>
@@ -409,8 +495,8 @@
   <!-- Modal de Sucesso -->
   <div id="successModal" class="modal">
     <div class="modal-content">
-      <div class="modal-header">Sucesso</div>
-      <div class="modal-body" id="successMessage">Login realizado com sucesso. Bem-vindo ao VS Drive!</div>
+      <div class="modal-header">Acesso Concedido</div>
+      <div class="modal-body" id="successMessage">Autenticação bem-sucedida. Bem-vindo ao sistema corporativo VS Drive.</div>
       <div class="modal-footer">
         <button onclick="closeModal('successModal')" class="btn-close">Fechar</button>
       </div>
@@ -424,25 +510,22 @@
     let currentMapUrl = "";
     let assistType = "";
 
-    // Função para formatar a data e hora de forma corporativa
+    // Função para formatar a data e hora de forma corporativa e moderna
     function updateDateTime() {
       const now = new Date();
       const options = { 
-        weekday: 'short', // abreviado: 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'
+        weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+        minute: '2-digit'
       };
-      const formatted = now.toLocaleDateString('pt-BR', options);
-      // Exemplo: "sáb, 18 de outubro de 2025 às 20:50:35"
-      // Vamos formatar para: "São: 20:50, hoje é dia 18 de outubro - Sáb"
+      const formattedDate = now.toLocaleDateString('pt-BR', options);
       const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      const date = `${now.getDate()} de ${now.toLocaleDateString('pt-BR', { month: 'long' })}`;
-      const weekday = now.toLocaleDateString('pt-BR', { weekday: 'short' }).toUpperCase(); // "SÁB"
-      document.getElementById('dateTime').textContent = `São: ${time}, hoje é dia ${date} - ${weekday}`;
+      
+      // Formato profissional: "Hoje, 19 de outubro de 2025 | 17:01"
+      document.getElementById('dateTime').textContent = `Hoje, ${formattedDate.split(', ')[1]} | ${time}`;
     }
 
     // Função para buscar dados da planilha via API v4
@@ -484,7 +567,7 @@
 
       } catch (error) {
         console.error("❌ Erro ao buscar dados da planilha:", error);
-        showModal('errorModal', 'Erro ao carregar dados. Verifique se a planilha está pública e tem cabeçalho na linha 1.');
+        showModal('errorModal', 'Falha na recuperação de dados. O sistema está temporariamente indisponível. Por favor, tente novamente mais tarde.');
         return [];
       }
     }
@@ -492,7 +575,7 @@
     async function login() {
       const cpfInput = document.getElementById('cpfInput').value.trim();
       if (!cpfInput || cpfInput.length !== 11) {
-        showModal('errorModal', 'Por favor, informe um CPF válido (11 dígitos numéricos).');
+        showModal('errorModal', 'CPF inválido. Por favor, insira um CPF com 11 dígitos numéricos.');
         return;
       }
 
@@ -512,7 +595,7 @@
 
       if (!user) {
         console.log("❌ Nenhum usuário encontrado com CPF:", cpfInput); // DEBUG
-        showModal('errorModal', 'Nenhum veículo ativo foi encontrado para este CPF. Verifique e tente novamente. Caso o erro persista, entre em contato com a equipe de suporte.');
+        showModal('errorModal', 'Nenhuma conta ativa encontrada para o CPF fornecido. Verifique os dados ou entre em contato com o suporte para assistência.');
         return;
       }
 
@@ -541,20 +624,10 @@
       // Configurar endereço e botão de mapa (apenas se houver ENDERECO)
       const addressContainer = document.getElementById('addressContainer');
       const addressText = document.getElementById('addressText');
-      const mapButton = document.getElementById('mapButton');
       if (user.endereco) {
         addressContainer.style.display = 'block';
         addressText.textContent = user.endereco;
         currentMapUrl = user.mapsLink || user.endereco; // Prioriza o link da coluna G, se existir
-
-        // Detectar tipo de mapa pelo link da coluna G
-        if (currentMapUrl.includes('waze.com')) {
-          mapButton.textContent = 'Ver no Waze';
-          mapButton.className = 'map-button waze-button';
-        } else {
-          mapButton.textContent = 'Ver no Google Maps';
-          mapButton.className = 'map-button';
-        }
       } else {
         addressContainer.style.display = 'none'; // Esconde completamente se não houver endereço
       }
@@ -572,20 +645,20 @@
       localStorage.setItem('loggedCpf', cpfInput);
       
       // Mostrar modal de sucesso
-      showModal('successModal', 'Login realizado com sucesso. Bem-vindo ao VS Drive!');
+      showModal('successModal', 'Autenticação bem-sucedida. Bem-vindo ao sistema corporativo VS Drive.');
     }
 
     function openAssistModal(type) {
       assistType = type;
       const header = document.getElementById('assistModalHeader');
       if (type === 'sos') {
-        header.textContent = 'SOS 24Hrs';
+        header.textContent = 'Suporte Emergencial';
       } else if (type === 'report') {
-        header.textContent = 'Manutenção';
+        header.textContent = 'Solicitar Manutenção';
       } else if (type === 'renew') {
         header.textContent = 'Renovar Contrato';
       } else if (type === 'help') {
-        header.textContent = 'Tirar Dúvidas';
+        header.textContent = 'Solicitar Suporte';
       }
       document.getElementById('problemDescription').value = '';
       
@@ -652,20 +725,6 @@
       closeModal('assistModal');
     }
 
-    // ✅ Função corrigida para abrir o mapa com window.open()
-    function openMap() {
-      if (currentMapUrl) {
-        // Tenta abrir com window.open
-        const opened = window.open(currentMapUrl, '_blank');
-        if (!opened) {
-          // Se window.open falhar, tenta window.location.href
-          window.location.href = currentMapUrl;
-        }
-      } else {
-        alert("Link de localização não disponível.");
-      }
-    }
-
     async function fetchWeather() {
       // Usaremos sua chave da API
       const apiKey = "cfae1dbaa59da04af36a3e48d8064148";
@@ -682,8 +741,8 @@
           const description = data.weather[0].description;
           const icon = data.weather[0].icon;
           const weatherHtml = `
-            <div class="flex items-center">
-              <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="w-10 h-10 mr-2" />
+            <div class="flex items-center justify-center">
+              <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="Ícone do tempo" class="weather-icon" />
               <span>${temp}°C • ${description}</span>
             </div>
           `;
@@ -752,19 +811,10 @@
 
           const addressContainer = document.getElementById('addressContainer');
           const addressText = document.getElementById('addressText');
-          const mapButton = document.getElementById('mapButton');
           if (user.endereco) {
             addressContainer.style.display = 'block';
             addressText.textContent = user.endereco;
             currentMapUrl = user.mapsLink || user.endereco;
-
-            if (currentMapUrl.includes('waze.com')) {
-              mapButton.textContent = 'Ver no Waze';
-              mapButton.className = 'map-button waze-button';
-            } else {
-              mapButton.textContent = 'Ver no Google Maps';
-              mapButton.className = 'map-button';
-            }
           } else {
             addressContainer.style.display = 'none';
           }
@@ -796,3 +846,4 @@
 
 </body>
 </html>
+
